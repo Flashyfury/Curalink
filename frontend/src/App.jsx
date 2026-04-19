@@ -81,7 +81,8 @@ function App() {
     try {
       setLoadingStep(0);
 
-      const res = await fetch('/api/chat', {
+      const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://curalink-odoe.onrender.com' : '');
+      const res = await fetch(`${baseUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
