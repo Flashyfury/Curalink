@@ -6,6 +6,36 @@ function ChatMessage({ role, content, time, metadata }) {
 
     const { studiesFound, trialsFound, topPublication, topTrial, context } = metadata;
 
+    const renderFormattedText = (text) => {
+      // Ensure numbered points drop to a new line
+      const nicelySpaced = text.replace(/(\d\.\s*\*\*?[A-Za-z\s]+(?:\*\*|:)?)/g, '\n$1').trim();
+      const lines = nicelySpaced.split('\n').filter(line => line.trim() !== '');
+
+      return lines.map((line, idx) => {
+        // Add minimal bullet styling if it starts with numeric bullets
+        const isBullet = /^\d\.\s/.test(line.trim());
+        
+        const lineParts = line.split(/(\*\*.*?\*\*)/g);
+        
+        return (
+          <div key={idx} style={{ 
+            marginBottom: '0.8rem', 
+            lineHeight: '1.6',
+            paddingLeft: isBullet ? '1.5rem' : '0',
+            position: 'relative'
+          }}>
+            {isBullet && <span style={{ position: 'absolute', left: '0', top: '0' }}>•</span>}
+            {lineParts.map((part, i) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={i}>{part.slice(2, -2)}</strong>;
+              }
+              return <span key={i}>{part}</span>;
+            })}
+          </div>
+        );
+      });
+    };
+
     return (
       <div className="message__bubble">
         <div className="response-card">
@@ -13,8 +43,7 @@ function ChatMessage({ role, content, time, metadata }) {
           <div className="response-section">
             <h3 className="response-section__title">🧠 Condition Overview</h3>
             <div className="response-section__content">
-              {content.split('Research Insights:')[0].replace('Condition Overview:', '').trim() || 
-               `${context?.disease || 'Condition'} overview based on current research.`}
+              {renderFormattedText(content) || `${context?.disease || 'Condition'} overview based on current research.`}
             </div>
           </div>
 
