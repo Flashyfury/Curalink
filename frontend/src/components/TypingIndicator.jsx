@@ -1,44 +1,27 @@
 function TypingIndicator({ step }) {
   const steps = [
-    'Searching publications...',
-    'Fetching trials...',
-    'Preparing response...'
+    'Analyzing patient context...',
+    'Scanning recent medical publications...',
+    'Cross-referencing active clinical trials...',
+    'Generating clinical report...'
   ];
 
+  // Map the 3 steps from App.jsx (0, 1, 2) to our 4 steps for a more detailed feel
+  // 0: Searching publications
+  // 1: Fetching trials
+  // 2: Preparing response
+  const displayStep = step === 0 ? 1 : step === 1 ? 2 : 3;
+
   return (
-    <div className="typing-indicator" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
-      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-        <div className="message__avatar">
-          🤖
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', padding: '0.8rem 1.1rem' }}>
+      <div className="analysis-indicator__spinner" style={{ flexShrink: 0 }}></div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+        <div className="analysis-indicator__text" style={{ fontSize: '0.92rem', color: 'var(--ink)' }}>
+          {steps[displayStep]}
         </div>
-        <div className="typing-indicator__dots">
-          <span className="typing-indicator__dot" />
-          <span className="typing-indicator__dot" />
-          <span className="typing-indicator__dot" />
+        <div style={{ fontSize: '0.74rem', color: 'var(--ink-2)', fontWeight: '500' }}>
+          Step {displayStep + 1} of {steps.length}
         </div>
-      </div>
-      
-      <div className="loading-status-container" style={{ marginLeft: 'calc(36px + 0.75rem)' }}>
-        {steps.map((text, i) => (
-          i <= step && (
-            <div key={i} className="loading-status-item">
-              <span 
-                className="status-dot" 
-                style={{ 
-                  background: i < step ? 'var(--cl-success)' : 'var(--cl-accent)',
-                  boxShadow: i === step ? '0 0 8px var(--cl-accent)' : 'none',
-                  opacity: i === step ? 1 : 0.6
-                }} 
-              />
-              <span style={{ 
-                color: i === step ? 'var(--cl-text-primary)' : 'var(--cl-text-muted)',
-                fontWeight: i === step ? '600' : '400'
-              }}>
-                {text}
-              </span>
-            </div>
-          )
-        ))}
       </div>
     </div>
   );
